@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Technician Skills Matrix</title>
+
+    <link rel="icon" type="image/png" href="images/pmi_favicon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .skill-level-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            width: 120px;
+            text-align: center;
+        }
+        .level-1 { background-color: #fee2e2; color: #b91c1c; } /* Beginner */
+        .level-2 { background-color: #ffedd5; color: #c2410c; } /* Intermediate */
+        .level-3 { background-color: #fef08a; color: #a16207; } /* Advanced */
+        .level-4 { background-color: #dcfce7; color: #166534; } /* Expert */
+        .level-5 { background-color: #e0e7ff; color: #4338ca; } /* Master */
+        .level-na { background-color: #f1f5f9; color: #64748b; } /* N/A */
+
+        .highlight-best {
+            box-shadow: 0 0 0 3px #000000;
+            transition: box-shadow 0.2s ease-in-out;
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* Style for the sticky header and first column */
+        .sticky-col {
+            position: -webkit-sticky;
+            position: sticky;
+            left: 0;
+            z-index: 10;
+        }
+         .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <div class="sm:w-1/4">
+                <img src="images/PMI_White_Trans.png" alt="Company Logo" class="h-18 mx-auto sm:mx-0">
+            </div>
+            <div class="text-center sm:w-1/2">
+                <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Service Technician Skills Matrix</h1>
+                <p class="mt-1 text-slate-600">Field Expertise at a Glance</p>
+            </div>
+
+  <a href="https://premiermechanicalinc-my.sharepoint.com/:b:/g/personal/jisrael_premier-mechanical-inc_com/EQsCwjDIOExHqzzb2KafEf4B5lRWKiiHzfLMe1e8Nse3ng?e=HXQQXO.pdf" target="_blank" class="text-sm text-sky-600 hover:underline">View Matrix SOP</a>
+</div>
+            <div class="sm:w-1/4"></div>
+        </header>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-center">
+                    <div class="lg:col-span-1">
+                        <label for="skillSearch" class="text-sm font-medium text-slate-700">Search Skill:</label>
+                        <input type="text" id="skillSearch" placeholder="e.g., MAU, Chiller, Boiler..." class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition px-3">
+                    </div>
+                    <div class="lg:col-span-1">
+                        <label for="technicianFilter" class="text-sm font-medium text-slate-700">Technician:</label>
+                        <select id="technicianFilter" class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition">
+                            <option value="all">All Technicians</option>
+                        </select>
+                    </div>
+                    <div class="lg:col-span-1">
+                        <label for="categoryFilter" class="text-sm font-medium text-slate-700">Category:</label>
+                        <select id="categoryFilter" class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition">
+                            <option value="all">All Categories</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-full mt-4">
+                        <label class="text-sm font-medium text-slate-700">Proficiency Level(s):</label>
+                        <div id="levelFilterContainer" class="mt-2 flex flex-wrap gap-x-6 gap-y-2 items-center">
+                            </div>
+                    </div>
+                    
+                    <div class="col-span-full mt-4 flex items-center">
+                        <input type="checkbox" id="showProfessionalSkills" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <label for="showProfessionalSkills" class="ml-2 block text-sm text-slate-700">Show Professional Skills</label>
+                        <span class="ml-2 text-xs text-slate-500">(Toggles display of non-technical skills...Safety, Communication, etc.)</span>
+                    </div>
+
+                    <div class="col-span-full mt-4">
+                        <button id="clearFiltersBtn" class="w-full sm:w-auto sm:mx-auto block bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition duration-150">Clear All Filters</button>
+                    </div>
+
+            </div>
+            <div class="text-center mt-4 border-t pt-4">
+                <p id="resultsCount" class="text-sm text-slate-500"></p>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+            <div id="tableContainer" class="w-full">
+                </div>
+        </div>
+        
+        <footer class="text-center mt-8">
+            <p class="text-sm text-slate-500">Data based on evaluations completed: <span id="versionDate" class="font-semibold text-slate-700">June 2025</span></p>
+        </footer>
+
+    </div>
+
+    <div id="techCardModal" class="fixed inset-0 bg-black bg-opacity-60 hidden p-4 sm:p-8 items-center justify-center z-50">
+        <div id="techCardContent" class="bg-slate-50 rounded-xl shadow-2xl w-full max-w-2xl max-h-full overflow-y-auto relative">
+            </div>
+    </div>
+
+    <div id="categoryInfoModal" class="fixed inset-0 bg-black bg-opacity-60 hidden p-4 sm:p-8 items-center justify-center z-50">
+        <div id="categoryInfoContent" class="bg-white rounded-lg shadow-xl w-full max-w-lg relative p-6">
+            </div>
+    </div>
+
+    <script src="techdata2.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const levelMap = {
+                1: 'Beginner',
+                2: 'Intermediate',
+                3: 'Advanced',
+                4: 'Expert',
+                5: 'Master'
+            };
+
+            const tableContainer = document.getElementById('tableContainer');
+            const technicianFilter = document.getElementById('technicianFilter');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const levelFilterContainer = document.getElementById('levelFilterContainer');
+            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+            const resultsCount = document.getElementById('resultsCount');
+            const skillSearch = document.getElementById('skillSearch');
+            const showProfessionalSkillsCheckbox = document.getElementById('showProfessionalSkills');
+
+            const categoryOrder = [
+                "Packaged / Unitary Equipment",
+                "VRF Systems",
+                "Commercial Refrigeration Equipment",
+                "Hydronic Systems",
+                "Controls",
+                "Additional Skills / Foundational",
+                "Building Envelope",
+                "Safety & Professionalism",
+                "Communication & Documentation",
+                "Job Performance & Efficiency",
+                "Business Development & Process"
+            ];
+
+            const allTechnicians = Object.keys(technicianDetails).sort();
+            const allSkills = skillMasterList.map(s => s.name);
+            const allCategories = categoryOrder;
+            const fullSkillsData = skillsData; 
+
+            const skillMap = fullSkillsData.reduce((acc, skill) => {
+                if (!acc[skill.name]) {
+                    acc[skill.name] = {};
+                }
+                acc[skill.name][skill.technician] = skill;
+                return acc;
+            }, {});
+
+            const populateFilters = () => {
+                allTechnicians.forEach(tech => {
+                    const option = document.createElement('option');
+                    option.value = tech;
+                    option.textContent = tech;
+                    technicianFilter.appendChild(option);
+                });
+
+                allCategories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilter.appendChild(option);
+                });
+
+                Object.entries(levelMap).forEach(([level, name]) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'flex items-center';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `level-${level}`;
+                    checkbox.value = level;
+                    checkbox.className = 'level-checkbox h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer';
+                    checkbox.addEventListener('change', renderMatrix);
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `level-${level}`;
+                    label.textContent = `${level} (${name})`;
+                    label.className = 'ml-2 block text-sm text-slate-800 cursor-pointer';
+
+                    wrapper.appendChild(checkbox);
+                    wrapper.appendChild(label);
+                    levelFilterContainer.appendChild(wrapper);
+                });
+            };
+
+            
+const renderMatrix = () => {
+                const selectedTechnician = technicianFilter.value;
+                const selectedCategory = categoryFilter.value;
+                const selectedLevels = Array.from(document.querySelectorAll('.level-checkbox:checked')).map(cb => cb.value);
+                const searchTerm = skillSearch.value.toLowerCase();
+                
+    		const showProfessionalSkillsCheckbox = document.getElementById('showProfessionalSkills');
+
+                const visibleTechnicians = selectedTechnician === 'all' 
+                    ? allTechnicians 
+                    : [selectedTechnician];
+
+                const visibleSkills = skillMasterList.filter(skillInfo => {
+                    const hiddenCategories = ["Safety & Professionalism", "Communication & Documentation", "Job Performance & Efficiency", "Business Development & Process"];
+if (!showProfessionalSkillsCheckbox.checked) {
+            const hiddenCategories = ["Safety & Professionalism", "Communication & Documentation", "Job Performance & Efficiency", "Business Development & Process"];
+            if (hiddenCategories.includes(skillInfo.category)) return false;}
+
+                    const searchWords = searchTerm.split(' ').filter(word => word.length > 0);
+                    const equipmentList = (categoryDetails[skillInfo.category] && categoryDetails[skillInfo.category].equipment) || [];
+                    const searchableText = (skillInfo.name + ' ' + equipmentList.join(' ')).toLowerCase();
+                    const searchMatch = searchTerm === '' || searchWords.every(word => searchableText.includes(word));
+                    if (!searchMatch) return false;
+
+                    const categoryMatch = selectedCategory === 'all' || skillInfo.category === selectedCategory;
+                    if (!categoryMatch) return false;
+
+                    if (selectedLevels.length === 0) return true;
+                    
+                    return visibleTechnicians.some(tech => {
+                        const skillLevel = skillMap[skillInfo.name]?.[tech]?.level;
+                        return skillLevel && selectedLevels.includes(String(skillLevel));
+                    });
+                }).map(skillInfo => skillInfo.name);
+                
+                let tableHtml = `<table class="w-full text-sm text-left text-slate-500">`;
+                tableHtml += `<thead class="text-xs text-slate-700 uppercase bg-slate-100 sticky-header">`;
+                
+                tableHtml += `<tr><th class="sticky-col bg-slate-100 py-2"></th>`;
+                visibleTechnicians.forEach(tech => {
+                    const details = technicianDetails[tech] || {};
+                    const photoUrl = details.photo || 'https://placehold.co/80x80/f1f5f9/64748b?text=N/A';
+                    tableHtml += `<th scope="col" class="p-2 text-center align-bottom cursor-pointer clickable-tech" data-tech-name="${tech}"><img src="${photoUrl}" alt="${tech}" class="w-16 h-16 rounded-full mx-auto border-2 border-white shadow-md pointer-events-none"></th>`;
+                });
+                tableHtml += `</tr>`;
+
+                tableHtml += `<tr><th class="sticky-col bg-slate-100"></th>`;
+                visibleTechnicians.forEach(tech => {
+                    tableHtml += `<th scope="col" class="px-6 pt-2 pb-1 text-center align-bottom font-bold">${tech}</th>`;
+                });
+                tableHtml += `</tr>`;
+                
+                // Role: Header bold, data not bold
+                tableHtml += `<tr><th class="sticky-col bg-slate-100 py-1 text-right pr-2 text-xs font-bold text-slate-500">Role:</th>`;
+                visibleTechnicians.forEach(tech => {
+                    const details = technicianDetails[tech] || {};
+                    tableHtml += `<td class="px-6 py-1 text-center text-xs text-slate-600">${details.role || 'N/A'}</td>`;
+                });
+                tableHtml += `</tr>`;
+
+                // LU 597 Class: Header bold, data not bold
+                tableHtml += `<tr><th class="sticky-col bg-slate-100 py-1 text-right pr-2 text-xs font-bold text-slate-500">LU 597 Class:</th>`;
+                visibleTechnicians.forEach(tech => {
+                    const details = technicianDetails[tech] || {};
+                    tableHtml += `<td class="px-6 py-1 text-center text-xs text-slate-600">${details.classification || 'N/A'}</td>`;
+                });
+                tableHtml += `</tr>`;
+                
+                // Supervisor: Header bold, data not bold
+                tableHtml += `<tr><th class="sticky-col bg-slate-100 py-1 text-right pr-2 text-xs font-bold text-slate-500">Supervisor:</th>`;
+                visibleTechnicians.forEach(tech => {
+                    const details = technicianDetails[tech] || {};
+                    tableHtml += `<td class="px-6 py-1 text-center text-xs text-slate-600">${details.supervisor || 'N/A'}</td>`;
+                });
+                tableHtml += `</tr>`;
+
+                // Location: Header bold, data not bold
+                tableHtml += `<tr><th class="sticky-col bg-slate-100 pb-2 text-right pr-2 text-xs font-bold text-slate-500">Location:</th>`;
+                    visibleTechnicians.forEach(tech => {
+                    const details = technicianDetails[tech] || {};
+                    tableHtml += `<td class="px-6 pb-2 text-center text-xs text-slate-600">${details.location || 'N/A'}</td>`;
+                });
+                tableHtml += `</tr>`;
+
+                tableHtml += `<tr class="border-t-2 border-slate-200"><th scope="col" class="px-6 py-3 sticky-col bg-slate-100 align-bottom font-bold text-slate-900">Technical / Professional Skill</th>`;
+                visibleTechnicians.forEach(tech => {
+                    tableHtml += `<th class="bg-slate-100"></th>`;
+                });
+                tableHtml += `</tr>`;
+                tableHtml += `</thead>`;
+
+                tableHtml += `<tbody class="bg-white">`;
+                if (visibleSkills.length === 0) {
+                        tableHtml += `<tr><td colspan="${visibleTechnicians.length + 1}" class="text-center p-8 text-slate-500">No skills match the current filters.</td></tr>`;
+                } else {
+                    let lastCategory = '';
+                    const applyHighlights = searchTerm.length > 0 && visibleSkills.length <= 10;
+                    visibleSkills.forEach(skillName => {
+                        let maxLevel = 0;
+                        if (applyHighlights) {
+                            visibleTechnicians.forEach(tech => {
+                                const skill = skillMap[skillName]?.[tech];
+                                if (skill && typeof skill.level === 'number' && skill.level > maxLevel) {
+                                    maxLevel = skill.level;
+                                }
+                            });
+                        }
+                        
+                        const skillInfo = skillMasterList.find(s => s.name === skillName);
+                        const skillCategory = skillInfo ? skillInfo.category : '';
+
+                        if (skillCategory && skillCategory !== lastCategory) {
+                            tableHtml += `<tr class="bg-slate-50"><td colspan="${visibleTechnicians.length + 1}" class="px-6 py-2 font-semibold text-blue-700 uppercase tracking-wider">${skillCategory} <span class="info-icon text-sky-500 hover:text-sky-700 cursor-pointer" data-category="${skillCategory}" title="Show equipment list">ⓘ</span></td></tr>`;
+                            lastCategory = skillCategory;
+                        }
+
+                        tableHtml += `<tr class="border-b hover:bg-slate-50 transition-colors">`;
+                        tableHtml += `<td class="px-6 py-4 font-medium text-slate-900 sticky-col bg-white hover:bg-slate-50">${skillName}</td>`;
+                        visibleTechnicians.forEach(tech => {
+                            const skill = skillMap[skillName]?.[tech];
+                            const isLevelFilterActive = selectedLevels.length > 0;
+                            
+                            let highlightClass = '';
+                            if (applyHighlights && skill && skill.level === maxLevel && maxLevel > 0) {
+                                highlightClass = 'highlight-best';
+                            }
+
+                            if (skill && typeof skill.level === 'number') {
+                                if (!isLevelFilterActive || selectedLevels.includes(String(skill.level))) {
+                                    tableHtml += `<td class="px-6 py-4 text-center">
+                                        <span class="skill-level-badge level-${skill.level} ${highlightClass}">
+                                            ${skill.level} - ${levelMap[skill.level]}
+                                        </span>
+                                    </td>`;
+                                } else {
+                                    tableHtml += `<td class="px-6 py-4 text-center">
+                                        <span class="skill-level-badge level-na">
+                                            -
+                                        </span>
+                                    </td>`;
+                                }
+                            } else {
+                                tableHtml += `<td class="px-6 py-4 text-center">
+                                    <span class="skill-level-badge level-na">
+                                        N/A
+                                    </span>
+                                </td>`;
+                            }
+                        });
+                        tableHtml += `</tr>`;
+                    });
+                }
+                tableHtml += `</tbody></table>`;
+                
+                tableContainer.innerHTML = tableHtml;
+                resultsCount.textContent = `Displaying ${visibleSkills.length} of ${allSkills.length} skills for ${visibleTechnicians.length} of ${allTechnicians.length} technicians.`;
+            };
+
+            const clearFilters = () => {
+                technicianFilter.value = 'all';
+                categoryFilter.value = 'all';
+                document.querySelectorAll('.level-checkbox').forEach(cb => cb.checked = false);
+                skillSearch.value = '';
+                renderMatrix();
+            };
+
+            const techCardModal = document.getElementById('techCardModal');
+            const techCardContent = document.getElementById('techCardContent');
+            const categoryInfoModal = document.getElementById('categoryInfoModal');
+            const categoryInfoContent = document.getElementById('categoryInfoContent');
+
+               
+
+const showTechCard = (techName) => {
+                const details = technicianDetails[techName];
+                const techSkills = skillsData.filter(skill => skill.technician === techName);
+
+                const formatDate = (dateString) => {
+                    if (!dateString) return 'N/A';
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+                };
+                
+                const calculateYears = (dateString) => {
+                    if (!dateString) return '';
+                    const startDate = new Date(dateString);
+                    const diff_ms = Date.now() - startDate.getTime();
+                    const age_dt = new Date(diff_ms);
+                    const years = Math.abs(age_dt.getUTCFullYear() - 1970);
+                    return years > 0 ? `(${years} years)` : '';
+                };
+
+                const skillsByLevel = {};
+                for (let i = 5; i >= 1; i--) {
+                    const skillsAtLevel = techSkills.filter(s => s.level === i).map(s => s.name);
+                    if (skillsAtLevel.length > 0) {
+                        skillsByLevel[i] = skillsAtLevel;
+                    }
+                }
+
+                let cardHtml = `
+                    <button id="closeCardBtn" class="absolute top-2 right-4 text-3xl font-bold text-slate-500 hover:text-slate-800 z-10">&times;</button>
+                    <div class="flex flex-col sm:flex-row items-center p-6 bg-slate-100 border-b border-slate-200">
+                        <img src="${details.photo}" alt="${techName}" class="w-24 h-24 rounded-full border-4 border-white shadow-lg mb-4 sm:mb-0 sm:mr-6">
+                        <div>
+                            <h2 class="text-3xl font-bold text-slate-900">${techName}</h2>
+                            <p class="text-md text-slate-600">${details.role || 'N/A'}</p>
+                            <p class="text-sm text-slate-500 mt-1">${details.classification || 'N/A'} &bull; ${details.location || 'N/A'}</p>
+                            ${details.specialty ? `<p class="mt-2 text-sm font-semibold text-sky-700">Specialty: ${details.specialty}</p>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <div>
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">Bio & Stats</h3>
+                            <div class="text-sm text-slate-700 space-y-2">
+                                <p><strong class="font-semibold w-28 inline-block">Supervisor:</strong> ${details.supervisor || 'N/A'}</p>
+                                <p><strong class="font-semibold w-28 inline-block">Start Date:</strong> ${formatDate(details.startDate)} ${calculateYears(details.startDate)}</p>
+                                <p><strong class="font-semibold w-28 inline-block">Union Date:</strong> ${formatDate(details.unionDate)} ${calculateYears(details.unionDate)}</p>
+                                <p><strong class="font-semibold w-28 inline-block">Birth Date:</strong> ${details.birthDate ? new Date(details.birthDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' }) : 'N/A'}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">Vehicle Info</h3>
+                            <div class="text-sm text-slate-700 space-y-2">
+                                <p><strong class="font-semibold w-28 inline-block">Vehicle #:</strong> ${details.vehicleNumber || 'N/A'}</p>
+                                <p><strong class="font-semibold w-28 inline-block">License Plate:</strong> ${details.licensePlate || 'N/A'}</p>
+                                <p><strong class="font-semibold w-28 inline-block">Ladder Rack:</strong> ${typeof details.ladderRack === 'boolean' ? (details.ladderRack ? 'Yes' : 'No') : 'N/A'}</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">Certifications</h3>
+                            <div class="flex flex-wrap gap-2">
+                                ${details.certifications && details.certifications.length > 0 
+                                    ? details.certifications.map(cert => `<span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full">${cert}</span>`).join('') 
+                                    : '<span class="text-sm text-slate-500">None listed</span>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 border-t border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4">Training Log</h3>
+                        ${details.training && details.training.length > 0
+                            ? `<ul class="space-y-3">${details.training.map(item => `
+                                <li class="flex items-center text-sm">
+                                    <span class="font-semibold text-slate-700 flex-1">${item.name}</span>
+<span class="text-slate-500 w-28 text-right">${item.date ? new Date(item.date).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC'}) : ''}</span>                                    <span class="text-xs font-bold ml-4 w-24 text-center px-2 py-0.5 rounded-full ${item.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${item.status}</span>
+                                </li>`).join('')}</ul>`
+                            : '<p class="text-sm text-slate-500">No training courses listed.</p>'
+                        }
+                    </div>
+
+                    <div class="p-6 border-t border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4">Skill Proficiency:</h3>
+                `;
+
+                Object.keys(skillsByLevel).sort((a, b) => b - a).forEach(level => {
+                    cardHtml += `
+                        <div class="mb-4">
+                            <h4 class="font-bold text-md text-slate-700 flex items-center">
+                                <span class="skill-level-badge level-${level} mr-3">${levelMap[level]}</span>
+                                <span class="flex-grow border-t border-slate-200"></span>
+                            </h4>
+                            <ul class="list-disc list-inside mt-2 text-slate-600">
+                                ${skillsByLevel[level].map(name => `<li>${name}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                });
+                
+                cardHtml += `</div>`;
+                techCardContent.innerHTML = cardHtml;
+                techCardModal.classList.remove('hidden');
+                techCardModal.classList.add('flex');
+            };
+
+            const hideTechCard = () => {
+                techCardModal.classList.add('hidden');
+                techCardModal.classList.remove('flex');
+                techCardContent.innerHTML = '';
+            };
+
+            const showCategoryInfo = (categoryName) => {
+                const details = categoryDetails[categoryName];
+                if (!details || !details.equipment || details.equipment.length === 0) return;
+                const equipmentList = details.equipment;
+                const note = details.note;
+                let modalHtml = `
+                    <button id="closeInfoBtn" class="absolute top-2 right-4 text-3xl font-bold text-slate-400 hover:text-slate-700">&times;</button>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4">${categoryName}</h2>
+                    <p class="text-sm text-slate-500 mb-4">This category includes proficiency with the following equipment:</p>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1">
+                        ${equipmentList.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                `;
+                if (note) {
+                    modalHtml += `
+                        <div class="mt-6 border-t pt-4">
+                            <p class="text-sm text-slate-700"><span class="font-bold">Note:</span> ${note}</p>
+                        </div>
+                    `;
+                }
+                categoryInfoContent.innerHTML = modalHtml;
+                categoryInfoModal.classList.remove('hidden');
+                categoryInfoModal.classList.add('flex');
+            };
+
+            const hideCategoryInfo = () => {
+                categoryInfoModal.classList.add('hidden');
+                categoryInfoModal.classList.remove('flex');
+                categoryInfoContent.innerHTML = '';
+            };
+
+            // --- Event Listeners ---
+            skillSearch.addEventListener('input', renderMatrix);
+            technicianFilter.addEventListener('change', renderMatrix);
+            categoryFilter.addEventListener('change', renderMatrix);
+            clearFiltersBtn.addEventListener('click', clearFilters);
+            showProfessionalSkillsCheckbox.addEventListener('change', renderMatrix);
+
+            document.addEventListener('click', (event) => {
+                if (event.target.classList.contains('clickable-tech')) {
+                    const techName = event.target.dataset.techName;
+                    showTechCard(techName);
+                }
+                if (event.target.id === 'closeCardBtn') {
+                    hideTechCard();
+                }
+                if (event.target.classList.contains('info-icon')) {
+                    const categoryName = event.target.dataset.category;
+                    showCategoryInfo(categoryName);
+                }
+                if (event.target.id === 'closeInfoBtn') {
+                    hideCategoryInfo();
+                }
+            });
+            techCardModal.addEventListener('click', (event) => {
+                if (event.target === techCardModal) {
+                    hideTechCard();
+                }
+            });
+            categoryInfoModal.addEventListener('click', (event) => {
+                if (event.target === categoryInfoModal) {
+                    hideCategoryInfo();
+                }
+            });
+
+            // --- Initial Load ---
+            populateFilters();
+            renderMatrix();
+        });
+    </script>
+</body>
+</html>
